@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "request": "^2.85.0",
     "stream-tweets": "^1.1.0"
   },
   "devDependencies": {},
