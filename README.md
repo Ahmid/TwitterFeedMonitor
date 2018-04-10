@@ -64,5 +64,16 @@ if __name__ == '__main__':
    
 ```
 
+## Report Engine
 
+### Description
+Elastic stack that ingest the spaCy output and display the tag cloud on a dashboard in Kibana
+
+### How to install (Windows)
+- Download and extract **[ElasticSearch](https://www.elastic.co/downloads/elasticsearch)**
+- Download and extract **[Kibana](https://www.elastic.co/downloads/kibana)**
+- Modify the file ```\elasticsearch-X.X.X\config\elasticsearch.yml``` and insert the IP and port numbers (the ones used in the spacy code).
+- Run ```/bin/elasticsearch.bat```
+- Modify ```\kibana-X.X.X-windows-x86_64\config\kibana.yml``` and uncomment line ```elasticsearch.url: "http://IP_ADDRESS:9200"```
+- Run ```\kibana-X.X.X-windows-x86_64\bin\kibana.bat```
 
