@@ -61,6 +61,7 @@ def ent(text: str, model: str):
 if __name__ == '__main__':
     es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
     r = requests.get('http://localhost:9200')
+    es.indices.delete(index='test_twitter', ignore=[400, 404])
     import waitress
     app = hug.API(__name__)
     app.http.add_middleware(CORSMiddleware(app))

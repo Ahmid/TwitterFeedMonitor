@@ -15,11 +15,11 @@ function getEntities(text, model) {
   };
   fetch('http://127.0.0.1:8000/ent', options)
       .then(res => res.json())
-      .then(entities => {
-          console.log(entities);
-      });
+      // .then(entities => {
+      //     console.log(entities);
+      // });
 }
 
- st.stream('Trump', function(results){
+ st.stream('Lebanon', function(results){
   getEntities(results.body, 'en_core_web_sm');
  });
