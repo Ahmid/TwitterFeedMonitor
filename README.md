@@ -19,7 +19,7 @@ The client is a Node.js script that pull the Twitter feed stream and send it ove
 - Open a cmd, go to the client directory and run the following ``` npm install ```
 - Insert the Twitter App Keys in the file with the below format:
 
-```
+```Javascript
 module.exports.twitterKeys = {
     consumer_key :      'XXXXXX',
     consumer_secret :   'XXXXXX',
@@ -29,7 +29,7 @@ module.exports.twitterKeys = {
 ```
 - Modify the IP/PORT addresses as follows:
 
-```
+```Javascript
 fetch('http://XX.XX.XX.XX:XXXX/ent', options)
 ```
 
