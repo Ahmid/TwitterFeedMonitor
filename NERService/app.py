@@ -6,6 +6,14 @@ import spacy
 from elasticsearch import Elasticsearch
 import json
 import requests
+import sys
+sys.tracebacklimit = 0
+
+import logging
+logging.getLogger("elasticsearch").setLevel(logging.CRITICAL)
+
+import socket
+connected = False
 
 
 MODELS = {
@@ -53,16 +61,39 @@ def ent(text: str, model: str):
     doc = nlp(text)
 
     for ent in doc.ents:
-        es.index(index='test_twitter', doc_type='words', body={'tag': ent.text})
-    # return [{'text': ent.text, 'start': ent.start_char, 'end': ent.end_char, 'label': ent.label_}
-    #         for ent in doc.ents]
+        global connected
+        if connected:
+            es.index(index='test_twitter', doc_type='words', body={'tag': ent.text})
+        else:
+            print('text :')
+            print(ent.text)
+            print(ent.label_)
+
+        return {'text': ent.text, 'start': ent.start_char, 'end': ent.end_char, 'label': ent.label_}
 
 
 if __name__ == '__main__':
-    es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-    r = requests.get('http://localhost:9200')
-    es.indices.delete(index='test_twitter', ignore=[400, 404])
+
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(('8.8.8.8', 1))  # connect() for UDP doesn't send packets
+    local_ip_address = s.getsockname()[0]
+    print (local_ip_address)
+
+    try:
+        es = Elasticsearch([{'host': 'localhost', 'port': 9200}]).ping()
+    except ConnectionRefusedError:
+        print ('Connection Errrorrr!')
+
+    if es:
+        es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
+        r = requests.get('http://localhost:9200')
+        es.indices.delete(index='test_twitter', ignore=[400, 404])
+        connected = True
+        print('Connected to ES..')
+    else:
+        print('Not connected to ES...')
+
     import waitress
     app = hug.API(__name__)
     app.http.add_middleware(CORSMiddleware(app))
-    waitress.serve(__hug_wsgi__, port=8000)
+    waitress.serve(__hug_wsgi__, host=local_ip_address, port=8000)
