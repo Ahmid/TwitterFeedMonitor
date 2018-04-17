@@ -110,12 +110,12 @@ ports:
 
 Now you should be able to access the Kibana interface from the internet, run ```kubectl get services``` and copy the external IP address then paste it in the web browser adding the kibana 5601 port to it and hit enter (X.X.X.X:5601).
 
-## NER Service
+### NER Service
 
-### Description
+#### Description
 A Python script that uses **[spaCy for NER](https://spacy.io/usage/linguistic-features#named-entities)**, exposed via **[spaCy's REST](https://github.com/explosion/spacy-services)** interface.
 
-#### Deploying the app 
+##### Deploying the app 
 1. Run the command ```kubectl get endpoints``` and copy the **IP Address** of the report-engine endpoint.
 2. Go to NER directory
 ```bash
@@ -140,12 +140,12 @@ kubectl expose deployment ner-service --type=LoadBalancer --port 80 --target-por
 ```
 
 
-## Client
+### Client
 
-### Description
+#### Description
 The client is a Node.js script that pull the Twitter feed stream and send it over for NER analysis.
 
-#### Deploying the app 
+##### Deploying the app 
 1. Create a **[Twitter APP](https://apps.twitter.com/)** with a name of your choice
 2. Go to Client directory:
 ```bash
