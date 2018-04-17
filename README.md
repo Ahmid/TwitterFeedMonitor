@@ -60,7 +60,7 @@ gcloud container clusters get-credentials [CLUSTER_NAME]
 #### Description
 Elastic stack that ingest the spaCy output and display the tag cloud on a dashboard in Kibana
 
-#### Deploying on Kuberenetes 
+#### Deploying the app
 1. Go to report engine directory:
 ```bash
 cd ReportEngine
@@ -85,7 +85,7 @@ kubectl get pods
 ```
 5. Expose your application to the Internet:
 ```bash
-kubectl expose deployment report-engine --type=LoadBalancer --port 80 --target-port 5601
+kubectl expose deployment report-engine --type=LoadBalancer
 ```
 The ```kubectl expose``` command above creates a Service resource, which provides networking and IP support to your application's Pods.
 Run ```kubectl get service``` to check the networking properties assigned.
@@ -114,22 +114,28 @@ Now you should be able to access the Kibana interface from the internet, run ```
 ### Description
 A Python script that uses **[spaCy for NER](https://spacy.io/usage/linguistic-features#named-entities)**, exposed via **[spaCy's REST](https://github.com/explosion/spacy-services)** interface.
 
-#### Deploying on Kuberenetes 
-1. Go to NER directory
+#### Deploying the app 
+1. Run the command ```kubectl get endpoints``` and copy the **IP Address** of the report-engine endpoint.
+2. Go to NER directory
 ```bash
-cd NERService
+cd ../NERService
 ```
-2. Build the container image:
+3. Open app.py and edit the **```reportEngineIPAddress```** variable, paste the copied **IP Address** inside the qotations. Save the file.
+4. Build the container image:
 ```bash 
 docker build -t gcr.io/YOUR_PROJECT_ID/ner-service:v1 .
 ```
-3. Upload the container image:
+5. Upload the container image:
 ```bash
 gcloud docker -- push gcr.io/YOUR_PROJECT_ID/ner-service:v1
 ```
-4. Deploy the app:
+6. Deploy the app:
 ```bash
-kubectl run report-engine --image=gcr.io/YOUR_PROJECT_ID/report-engine:v1 --port 5601
+kubectl run ner-service --image=gcr.io/YOUR_PROJECT_ID/ner-service:v1 --port 8000
+```
+7. Expose your application:
+```bash
+kubectl expose deployment ner-service --type=LoadBalancer --port 80 --target-port 8000
 ```
 
 
@@ -138,10 +144,10 @@ kubectl run report-engine --image=gcr.io/YOUR_PROJECT_ID/report-engine:v1 --port
 ### Description
 The client is a Node.js script that pull the Twitter feed stream and send it over for NER analysis.
 
-### How to install
-- Create a **[Twitter APP](https://apps.twitter.com/)** with a name of your choice
-- Create a file in the same repository with the name api-keys (/Client/api-keys)
-- Insert the Twitter App Keys in the file with the below format:
+#### Deploying the app 
+1. Create a **[Twitter APP](https://apps.twitter.com/)** with a name of your choice
+2. Create a file in the same repository with the name api-keys (/Client/api-keys)
+3. Insert the Twitter App Keys in the file with the below format:
 
 ```Javascript
 module.exports.twitterKeys = {
@@ -151,37 +157,43 @@ module.exports.twitterKeys = {
     token_secret:       'XXXXXX'
 };
 ```
-- Modify the IP/PORT addresses as follows:
-
-```Javascript
-fetch('http://XX.XX.XX.XX:XXXX/ent', options)
+4. Run the command ```kubectl get endpoints``` and copy the IP Address of the ner-service service.
+5. Go to client directpry
+```bash
+cd ../Client
 ```
+6. Open index.js and edit the line: 
+```Javascript
+fetch('http://XX.XX.XX.XX:8000/ent', options)
+```
+paste the copied IP address inside the qotations. Save the file.
 
-Now the client part is ready to stream the twitter feeds, you can insert any word of your choice in the file index.js:
+7. Insert any word of your choice to get the tweets feed in the file index.js:
 ```Javascript
 st.stream('YOUR_WORD', function(results){
   getEntities(results.body, 'en_core_web_sm');
 });
 ```
-
-
-
-
-- Download and install **[Python 3.6.X](https://www.python.org/downloads/)**
-- Open a cmd, go to NERService directory, and run ```pip install -r requirments.txt```
-- Modify the IP/Port numbers:
-
-```Python
-if __name__ == '__main__':
-    es = Elasticsearch([{'host': 'localhost', 'port': 9200}])
-    r = requests.get('http://localhost:9200')
-    es.indices.delete(index='test_twitter', ignore=[400, 404])
-    import waitress
-    app = hug.API(__name__)
-    app.http.add_middleware(CORSMiddleware(app))
-    waitress.serve(__hug_wsgi__, port=8000)
-   
+8. Build the container image:
+```bash 
+docker build -t gcr.io/YOUR_PROJECT_ID/client:v1 .
 ```
+9. Upload the container image:
+```bash
+gcloud docker -- push gcr.io/YOUR_PROJECT_ID/client:v1
+```
+10. Deploy the app:
+```bash
+kubectl run client --image=gcr.io/YOUR_PROJECT_ID/client:v1 --port 8000
+```
+11. Expose your application:
+```bash
+kubectl expose deployment client --type=LoadBalancer --port 80 --target-port 9200
+```
+
+
+
+
 
 
 
