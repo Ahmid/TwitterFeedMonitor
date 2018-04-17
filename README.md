@@ -192,6 +192,25 @@ kubectl expose deployment client --type=LoadBalancer --port 80 --target-port 920
 ```
 
 
+## Additional Info: Deploy a new version of your app
+Kubernetes Engine's rolling update mechanism ensures that your application remains up and available even as the system replaces instances of your old container image with your new one across all the running replicas.
+
+You can create an image for the v2 version of your application by building the same source code and tagging it as v2:
+```bash
+docker build -t gcr.io/YOUR_PROJECT_ID/client:v2 .
+```
+
+Then push the image to the Google Container Registry:
+```bash
+gcloud docker -- push gcr.io/YOUR_PROJECT_ID/client:v2
+```
+
+Now, apply a rolling update to the existing deployment with an image update:
+```bash
+kubectl set image deployment/client client=gcr.io/YOUR_PROJECT_ID/client:v2
+```
+
+
 
 
 
