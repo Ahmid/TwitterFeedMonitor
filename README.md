@@ -1,11 +1,45 @@
 # TwitterFeedMonitor
-This App monitors the entities (person names, place names) being mentioned in a Twitter feed and output a real-time tag cloud of the entity names being mentioned in the feed.
+This App monitors the entities (person names, place names, etc..) being mentioned in a Twitter feed and output a real-time tag cloud of the entity names being mentioned in the feed.
 
 ## Getting Started
 The app is composed of three main nodes:
 - **Client** : Acts as the Twitter client that streams the feed and sends each tweet to the named entity recognizer (NER) service.
 - **NER Service** : Acts as the NER service that receives an API request to analyze a tweet and sends the tweet information to the report engine along with the detected entities.
 - **Report Engine** : Acts as the report engine that receives a list of tweets + entities and displays a tag cloud visualization that updates in real-time.
+
+This will be implemented inside **Docker** containers and orchestrated by **Kuberentes** using **Google Cloud Platform**.
+
+## Before you begin
+### Take the following steps to enable the Kubernetes Engine API:
+1. Visit the [Kubernetes Engine page](https://console.cloud.google.com/projectselector/kubernetes?_ga=2.118272329.-1974524917.1523519102) in the Google Cloud Platform Console.
+2. Create or select a project.
+3. Wait for the API and related services to be enabled. This can take several minutes.
+4. Make sure that [billing](https://cloud.google.com/billing/docs/how-to/modify-project) is enabled for your project. 
+
+### Enabling command-line tools locally:
+1. Install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/quickstarts), which includes the `gcloud` command-line tool.
+2. Using the `gcloud` command line tool, install the [Kubernetes](https://kubernetes.io/) command-line tool. `kubectl` is used to communicate with Kubernetes, which is the cluster orchestration system of Kubernetes Engine clusters:
+       
+       gcloud components install kubectl
+3. Install [Docker Community Edition (CE)](https://docs.docker.com/install/) on your workstation. You will use this to build a container image for the application.
+
+
+## Preparing the API
+
+
+
+
+
+
+## Report Engine
+
+### Description
+Elastic stack that ingest the spaCy output and display the tag cloud on a dashboard in Kibana
+
+### How to run
+
+
+
 
 ## Client
 
@@ -15,8 +49,6 @@ The client is a Node.js script that pull the Twitter feed stream and send it ove
 ### How to install
 - Create a **[Twitter APP](https://apps.twitter.com/)** with a name of your choice
 - Create a file in the same repository with the name api-keys (/Client/api-keys)
-- Download node.js from **[Node.JS Official Website](https://nodejs.org/en/download/)**
-- Open a cmd, go to the client directory and run the following ``` npm install ```
 - Insert the Twitter App Keys in the file with the below format:
 
 ```Javascript
@@ -64,16 +96,5 @@ if __name__ == '__main__':
    
 ```
 
-## Report Engine
 
-### Description
-Elastic stack that ingest the spaCy output and display the tag cloud on a dashboard in Kibana
-
-### How to install (Windows)
-- Download and extract **[ElasticSearch](https://www.elastic.co/downloads/elasticsearch)**
-- Download and extract **[Kibana](https://www.elastic.co/downloads/kibana)**
-- Modify the file ```\elasticsearch-X.X.X\config\elasticsearch.yml``` and insert the IP and port numbers (the ones used in the spacy code).
-- Run ```/bin/elasticsearch.bat```
-- Modify ```\kibana-X.X.X-windows-x86_64\config\kibana.yml``` and uncomment line ```elasticsearch.url: "http://IP_ADDRESS:9200"```
-- Run ```\kibana-X.X.X-windows-x86_64\bin\kibana.bat```
 
