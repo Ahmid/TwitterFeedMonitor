@@ -61,19 +61,75 @@ gcloud container clusters get-credentials [CLUSTER_NAME]
 Elastic stack that ingest the spaCy output and display the tag cloud on a dashboard in Kibana
 
 #### Deploying on Kuberenetes 
-1. Build the container image:
+1. Go to report engine directory:
+```bash
+cd ReportEngine
+```
+2. Build the container image:
 ```bash 
 docker build -t gcr.io/YOUR_PROJECT_ID/report-engine:v1 .
 ```
 You can run ```docker images``` command to verify that the build was successful
 
-2. Upload the container image:
+3. Upload the container image:
 ```bash
 gcloud docker -- push gcr.io/YOUR_PROJECT_ID/report-engine:v1
 ```
-3. Deploy the app:
+4. Deploy the app:
 ```bash
-kubectl run client --image=gcr.io/YOUR_PROJECT_ID/report-engine:v1 --port 5601
+kubectl run report-engine --image=gcr.io/YOUR_PROJECT_ID/report-engine:v1 --port 5601
+```
+To see the Pod created by the Deployment, run the following command:
+```bash
+kubectl get pods
+```
+5. Expose your application to the Internet:
+```bash
+kubectl expose deployment report-engine --type=LoadBalancer --port 80 --target-port 5601
+```
+The ```kubectl expose``` command above creates a Service resource, which provides networking and IP support to your application's Pods.
+Run ```kubectl get service``` to check the networking properties assigned.
+
+6. Expose ports in YAML file:
+As the ```kubectl expose``` command allows only to expose one port, and the report engine image runs on two ports (5601 for Kibana and 9200 for Elasticsearch), then you should manually add the second port in the condiguration file.
+- Open google cloud platform 
+- Go to Kubernates Engine -> Workloads
+- Click on **report-engine** workload -> YAML 
+- Click Edit 
+- Add the following under containers:
+```YAML
+ports:
+        - containerPort: 5601
+          name: kibana
+          protocol: TCP
+        - containerPort: 9200
+          name: elastic
+          protocol: TCP
+```
+
+Now you should be able to access the Kibana interface from the internet, run ```kubectl get services``` and copy the external IP address then paste it in the web browser adding the kibana 5601 port to it and hit enter (XXX.XXX.XXX.XXX:5601).
+
+## NER Service
+
+### Description
+A Python script that uses **[spaCy for NER](https://spacy.io/usage/linguistic-features#named-entities)**, exposed via **[spaCy's REST](https://github.com/explosion/spacy-services)** interface.
+
+#### Deploying on Kuberenetes 
+1. Go to NER directory
+```bash
+cd NERService
+```
+2. Build the container image:
+```bash 
+docker build -t gcr.io/YOUR_PROJECT_ID/ner-service:v1 .
+```
+3. Upload the container image:
+```bash
+gcloud docker -- push gcr.io/YOUR_PROJECT_ID/ner-service:v1
+```
+4. Deploy the app:
+```bash
+kubectl run report-engine --image=gcr.io/YOUR_PROJECT_ID/report-engine:v1 --port 5601
 ```
 
 
@@ -109,12 +165,7 @@ st.stream('YOUR_WORD', function(results){
 ```
 
 
-## NER Service
 
-### Description
-A Python script that uses **[spaCy for NER](https://spacy.io/usage/linguistic-features#named-entities)**, exposed via **[spaCy's REST](https://github.com/explosion/spacy-services)** interface.
-
-### How to install
 
 - Download and install **[Python 3.6.X](https://www.python.org/downloads/)**
 - Open a cmd, go to NERService directory, and run ```pip install -r requirments.txt```
