@@ -63,9 +63,10 @@ Elastic stack that ingest the spaCy output and display the tag cloud on a dashbo
 #### Deploying on Kuberenetes 
 1. Build the container image:
 ```bash 
-docker build -t gcr.io/YOUR_PROJECT_ID/report-engine:v1 
+docker build -t gcr.io/YOUR_PROJECT_ID/report-engine:v1 .
 ```
-You can run ```docker images``` command to verify that the build was successful:
+You can run ```docker images``` command to verify that the build was successful
+
 2. Upload the container image:
 ```bash
 gcloud docker -- push gcr.io/YOUR_PROJECT_ID/report-engine:v1
@@ -73,7 +74,7 @@ gcloud docker -- push gcr.io/YOUR_PROJECT_ID/report-engine:v1
 3. Deploy the app:
 ```bash
 kubectl run client --image=gcr.io/YOUR_PROJECT_ID/report-engine:v1 --port 5601
-
+```
 
 
 ## Client
