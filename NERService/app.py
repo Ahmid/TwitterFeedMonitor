@@ -79,14 +79,15 @@ if __name__ == '__main__':
     local_ip_address = s.getsockname()[0]
     print (local_ip_address)
 
+    reportEngineIPAddress = 'X.X.X.X'
+	
     try:
-        es = Elasticsearch([{'host': '10.0.2.12', 'port': 9200}]).ping()
+        es = Elasticsearch([{'host': reportEngineIPAddress, 'port': 9200}]).ping()
     except ConnectionRefusedError:
         print ('Connection Error!')
 
     if es:
-        es = Elasticsearch([{'host': '10.0.2.12', 'port': 9200}])
-        r = requests.get('http://10.0.2.12:9200')
+        es = Elasticsearch([{'host': reportEngineIPAddress, 'port': 9200}])
         es.indices.delete(index='test_twitter', ignore=[400, 404])
         connected = True
         print('Connected to ES..')
