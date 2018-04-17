@@ -26,18 +26,53 @@ This will be implemented inside **Docker** containers and orchestrated by **Kube
 
 ## Preparing the API
 
+#### Step 1: Set Default Configuration
+To save time typing your [project ID](https://support.google.com/cloud/answer/6158840) and [Compute Engine zone](https://cloud.google.com/compute/docs/regions-zones/#available) options in the gcloud command-line tool, you can set default configuration values by running the following commands:
+       
+ ```bash
+gcloud config set project [PROJECT_ID]
+gcloud config set compute/zone us-central1-b
+  ```
+      
+       
+#### Step 2: Creating a Kubernetes Engine cluster
+A cluster consists of at least one cluster master machine and multiple worker machines called nodes. Nodes are Compute Engine virtual machine (VM) instances that run the Kubernetes processes necessary to make them part of the cluster. You deploy applications to clusters, and the applications run on the nodes.
+
+To create a cluster, run the following command:
+```bash       
+gcloud container clusters create [CLUSTER_NAME]
+```
+where ```[CLUSTER_NAME]``` is the name you choose for the cluster.
+***Note:*** It might take several minutes to finish creating the cluster.
+
+#### Step3: Get authentication credentials for the cluster
+After creating your cluster, you need to get authentication credentials to interact with the cluster.
+To authenticate for the cluster, run the following command:
+```bash
+gcloud container clusters get-credentials [CLUSTER_NAME]
+```
+
+## Deploying the nodes
 
 
+### Report Engine
 
-
-
-## Report Engine
-
-### Description
+#### Description
 Elastic stack that ingest the spaCy output and display the tag cloud on a dashboard in Kibana
 
-### How to run
-
+#### Deploying on Kuberenetes 
+1. Build the container image:
+```bash 
+docker build -t gcr.io/YOUR_PROJECT_ID/report-engine:v1 
+```
+You can run ```docker images``` command to verify that the build was successful:
+2. Upload the container image:
+```bash
+gcloud docker -- push gcr.io/YOUR_PROJECT_ID/report-engine:v1
+```
+3. Deploy the app:
+```bash
+kubectl run client --image=gcr.io/YOUR_PROJECT_ID/report-engine:v1 --port 5601
 
 
 
