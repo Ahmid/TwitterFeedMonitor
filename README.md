@@ -91,6 +91,7 @@ The ```kubectl expose``` command above creates a Service resource, which provide
 Run ```kubectl get service``` to check the networking properties assigned.
 
 6. Expose ports in YAML file:
+
 As the ```kubectl expose``` command allows only to expose one port, and the report engine image runs on two ports (5601 for Kibana and 9200 for Elasticsearch), then you should manually add the second port in the condiguration file.
 - Open google cloud platform 
 - Go to Kubernates Engine -> Workloads
@@ -107,7 +108,7 @@ ports:
           protocol: TCP
 ```
 
-Now you should be able to access the Kibana interface from the internet, run ```kubectl get services``` and copy the external IP address then paste it in the web browser adding the kibana 5601 port to it and hit enter (XXX.XXX.XXX.XXX:5601).
+Now you should be able to access the Kibana interface from the internet, run ```kubectl get services``` and copy the external IP address then paste it in the web browser adding the kibana 5601 port to it and hit enter (X.X.X.X:5601).
 
 ## NER Service
 
@@ -146,8 +147,12 @@ The client is a Node.js script that pull the Twitter feed stream and send it ove
 
 #### Deploying the app 
 1. Create a **[Twitter APP](https://apps.twitter.com/)** with a name of your choice
-2. Create a file in the same repository with the name api-keys (/Client/api-keys)
-3. Insert the Twitter App Keys in the file with the below format:
+2. Go to Client directory:
+```bash
+cd ../client
+```
+3. Create a file in the same repository with the name api-keys (/Client/api-keys)
+4. Insert the Twitter App Keys in the file with the below format:
 
 ```Javascript
 module.exports.twitterKeys = {
@@ -157,11 +162,7 @@ module.exports.twitterKeys = {
     token_secret:       'XXXXXX'
 };
 ```
-4. Run the command ```kubectl get endpoints``` and copy the IP Address of the ner-service service.
-5. Go to client directpry
-```bash
-cd ../Client
-```
+5. Run the command ```kubectl get endpoints``` and copy the IP Address of the ner-service service.
 6. Open index.js and edit the line: 
 ```Javascript
 fetch('http://XX.XX.XX.XX:8000/ent', options)
