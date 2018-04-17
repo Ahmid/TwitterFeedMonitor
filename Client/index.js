@@ -13,14 +13,11 @@ function getEntities(text, model) {
       credentials: 'same-origin',
       body: JSON.stringify({ text, model })
   };
-  fetch('http://10.0.1.6:8000/ent', options)
+  fetch('http://X.X.X.X:8000/ent', options)
        .then(res => res.json())
 		.then(entities => {
           console.log(entities);
 		});
-       .then(entities => {
-           console.log(entities);
-       });
  }
 
   st.stream('javascript', function(results){
