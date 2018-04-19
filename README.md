@@ -265,7 +265,7 @@ Run ```kubectl get service``` to check the networking properties assigned.
 The ```--type=LoadBalancer``` flag indicates that you want to expose your Service outside of the cluster. On cloud providers that support load balancers, an external IP address would be provisioned to access the Service. On Minikube, the ```LoadBalancer``` type makes the Service accessible through the minikube service command.
 
 ```bash
-minikube service hello-node
+minikube service report-engine
 ```
 This automatically opens up a browser window using a local IP address that serves your app and shows the interface.
 
@@ -352,7 +352,7 @@ kubectl set image deployment/client client=client:v2
 
 4.Run your app again to view the new message:
 ```
-minikube service hello-node
+minikube service report-engine
 ```
 
 
