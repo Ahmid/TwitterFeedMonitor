@@ -237,7 +237,7 @@ minikube dashboard
 ```
 **Note**: It may take few minutes to initialize the cluster after running ```minikube start``` so dashboard might take some time to open.
 
-7. Issue the command for building the image using the same Docker host as the Minikube V:
+7. Issue the command for building the image using the same Docker host as the Minikube VM:
 ```bash
 eval $(minikube docker-env)
 ```
