@@ -48,7 +48,7 @@ tqdm==4.20.0
 Twisted==17.9.0
 ujson==1.35
 urllib3==1.22
-waitress==1.1.0
+waitress==1.4.0
 wcwidth==0.1.7
 wrapt==1.10.11
 zope.interface==4.4.3
