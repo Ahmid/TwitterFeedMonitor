@@ -28,7 +28,7 @@ pathlib==1.0.1
 plac==0.9.6
 pluggy==0.6.0
 preshed==1.0.0
-py==1.5.3
+py==1.10.0
 pyelasticsearch==1.4.1
 pyreadline==2.1
 pytest==3.5.0
